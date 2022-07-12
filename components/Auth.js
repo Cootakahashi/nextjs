@@ -26,6 +26,7 @@ export default function Auth() {
           body: JSON.stringify({ username: username, password: password }),
           headers: {
             "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
           },
         }
       )
@@ -63,6 +64,8 @@ export default function Auth() {
           body: JSON.stringify({ username: username, password: password }),
           headers: {
             "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+            
           },
         }).then((res) => {
           //fetchの内容が400で失敗した場合例外をthrowで投げる
