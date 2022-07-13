@@ -1,18 +1,18 @@
-import { useState } from 'react'; 
-import { useRouter } from 'next/router';
-import Cookie from 'universal-cookie';
+import { useState } from 'react'
+import { useRouter } from 'next/router'
+import Cookie from 'universal-cookie'
 import Image from 'next/image'
 // JWTトークンをcookieに格納
 const cookie = new Cookie()
 
 export default function Auth() {
   // 関数の中からページ遷移したい時にrouterを使う
-  const router = useRouter();
+  const router = useRouter()
   // localステートを定義
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
   // loginモードとregisterモードを示す為のisLogin
-  const [isLogin, setIsLogin] = useState(true);
+  const [isLogin, setIsLogin] = useState(true)
 
   // Its function for login.
   const login = async () => {
@@ -22,81 +22,71 @@ export default function Auth() {
         `${process.env.NEXT_PUBLIC_RESTAPI_URL}api/auth/jwt/create/`,
         {
           // POSTでusernameとpasswordを渡すことでaccessトークンを獲得
-          method: "POST",
+          method: 'POST',
           body: JSON.stringify({ username: username, password: password }),
           headers: {
-            "Content-Type": "application/json",
-            "Access-Control-Allow-Origin": "*",
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*',
           },
-        }
+        },
       )
-      .then((res) => {
-        if (res.status === 400) {
-          throw "authentication failed";
-        } else if (res.ok) {
-          // res objをjsonに変更してreturn
-          return res.json();
-        }
-      })
-      .then((data) => {
-        // アクセストークンをcookieにsetする
-        const options = { path: "/" };
-        // optionsで上のroot path以下でcookieが有効になる
-        cookie.set("access_token", data.access, options);
-      });
+        .then((res) => {
+          if (res.status === 400) {
+            throw 'authentication failed'
+          } else if (res.ok) {
+            // res objをjsonに変更してreturn
+            return res.json()
+          }
+        })
+        .then((data) => {
+          // アクセストークンをcookieにsetする
+          const options = { path: '/' }
+          // optionsで上のroot path以下でcookieが有効になる
+          cookie.set('access_token', data.access, options)
+        })
       //成功したらrouterpushでmain-pageに遷移
-      router.push("/main-page");
-  } catch (err) {
-      alert(err);
+      router.push('/main-page')
+    } catch (err) {
+      alert(err)
     }
-  };
+  }
 
   //submitボタンが押された時onSubmitで動く関数
   const authUser = async (e) => {
     //自動で行われるreloadを防ぐ
-    e.preventDefault();
+    e.preventDefault()
     if (isLogin) {
-      login();
+      login()
     } else {
       try {
         await fetch(`${process.env.NEXT_PUBLIC_RESTAPI_URL}api/register/`, {
-          method: "POST",
+          method: 'POST',
           body: JSON.stringify({ username: username, password: password }),
           headers: {
-            "Content-Type": "application/json",
-            "Access-Control-Allow-Origin": "*",
-            
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*',
           },
         }).then((res) => {
           //fetchの内容が400で失敗した場合例外をthrowで投げる
           if (res.status === 400) {
-            throw "authentication failed";
+            throw 'authentication failed'
           }
-        });
+        })
         // 成功した場合
-        login();
+        login()
       } catch (err) {
-        alert(err);
+        alert(err)
       }
     }
-  };
-
+  }
 
   return (
     <div className="min-h-full flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
         <div>
-          {/* <Image
-            className="mx-auto h-12 w-auto"
-            src="https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg"
-            alt="Workflow"
-            width={100}
-            height={100}
-          /> */}
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900 text-white">
-            {isLogin ? "Login" : "Sign up"}
+            {isLogin ? 'Login' : 'Sign up'}
           </h2>
-
         </div>
         <form className="mt-8 space-y-6" onSubmit={authUser}>
           <input type="hidden" name="remember" defaultValue="true" />
@@ -112,7 +102,7 @@ export default function Auth() {
                 value={username}
                 //入力された内容で更新するsetUsername 更新用関数
                 onChange={(e) => {
-                  setUsername(e.target.value);
+                  setUsername(e.target.value)
                 }}
               />
             </div>
@@ -126,17 +116,18 @@ export default function Auth() {
                 placeholder="Password"
                 value={password}
                 onChange={(e) => {
-                  setPassword(e.target.value);
+                  setPassword(e.target.value)
                 }}
               />
             </div>
           </div>
           <div className="flex items-center justify-center">
             <div className="text-sm">
-              <span 
-              // onClickで現在のisLoginのstateを反転させる
-              onClick={() => setIsLogin(!isLogin)} 
-              className="cursor-pointer font-medium text-white hover:text-indigo-500">
+              <span
+                // onClickで現在のisLoginのstateを反転させる
+                onClick={() => setIsLogin(!isLogin)}
+                className="cursor-pointer font-medium text-white hover:text-indigo-500"
+              >
                 change mode ?
               </span>
             </div>
@@ -161,9 +152,9 @@ export default function Auth() {
                     strokeLinejoin="round"
                     d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
                   />
-                </svg> 
+                </svg>
               </span>
-              {isLogin ? "Login with JWT": "Create new user"}
+              {isLogin ? 'Login with JWT' : 'Create new user'}
             </button>
           </div>
         </form>
