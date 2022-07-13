@@ -45,19 +45,29 @@ export default function Auth() {
       login();
     } else {
       try {
+        console.log("HERE1")
         await fetch(`${process.env.NEXT_PUBLIC_RESTAPI_URL}api/register/`, {
           method: "POST",
           body: JSON.stringify({ username: username, password: password }),
           headers: {
             "Content-Type": "application/json",
           },
+
         }).then((res) => {
+          console.log("HERE2")
+
           if (res.status === 400) {
             throw "authentication failed";
+            console.log("HERE3")
+
           }
         });
+        console.log("HERE4")
+
         login();
       } catch (err) {
+        console.log("HERE catch err")
+
         alert("something happend", err);
       }
     }
