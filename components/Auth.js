@@ -51,6 +51,7 @@ export default function Auth() {
           body: JSON.stringify({ username: username, password: password }),
           headers: {
             "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "https://next-sigma-cyan.vercel.app/"
           },
 
         }).then((res) => {
