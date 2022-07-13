@@ -58,7 +58,7 @@ export default function Auth() {
         });
         login();
       } catch (err) {
-        alert(err);
+        alert("something happend", err);
       }
     }
   };
