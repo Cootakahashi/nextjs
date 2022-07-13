@@ -19,7 +19,6 @@ export default function Auth() {
           body: JSON.stringify({ username: username, password: password }),
           headers: {
             "Content-Type": "application/json",
-
           },
         }
       )
@@ -27,13 +26,11 @@ export default function Auth() {
           if (res.status === 400) {
             throw "authentication failed";
           } else if (res.ok) {
-            console.log(res.status)
             return res.json();
           }
         })
         .then((data) => {
-          const options = { path: "/" 
-        };
+          const options = { path: "/" };
           cookie.set("access_token", data.access, options);
         });
       router.push("/main-page");
